@@ -17,7 +17,7 @@ const server = http.createServer(function(req, res) {
     } else if (installerArray.length == 3) {
         const os = installerArray[0];
         const arch = installerArray[1];
-        const jdk = installerArray[2];
+        const jdk = installerArray[2].substring(3);
         res.writeHead(302, {
             location: `https://vscjavaci.blob.core.windows.net/vscodejavainstaller/latest/VSCodeJava${jdk}Installer-${os}-${arch}-${version}.exe`});
     } 
