@@ -1,10 +1,10 @@
 'use strict'
 
-var http = require('http');
+const http = require('http');
 
-var server = http.createServer(function(req, res) {
-    //const version = process.env.version;
-    const version = "0.1.0";
+const server = http.createServer(function(req, res) {
+    const version = process.env.version;
+    //const version = "0.1.0";
     let array = req.url.split("/");
     if(array[array.length - 1] == "")
         array.pop();
