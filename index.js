@@ -23,5 +23,5 @@ const server = http.createServer(function(req, res) {
     } 
     return res.end();
 })
-
-server.listen(3000);
+const port = process.env.PORT || 1337;
+server.listen(port);
