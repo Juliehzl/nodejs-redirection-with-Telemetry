@@ -1,7 +1,8 @@
 {
-    "name": "app-service-hello-world",
-    "description": "Simple Hello World Node.js sample for Azure App Service",
-    "version": "0.0.1",
+    "name": "vscode-java-installer",
+    "version": "0.1.0",
+    "publisher": "vscjava",
+    "aiKey": "ab7348c7-3ddf-4846-9277-1e9157a6821b",
     "private": true,
     "license": "MIT",
     "author": "Microsoft",
@@ -9,6 +10,16 @@
         "start": "node index.js"
     },
     "dependencies": {
-        "express": "^4.17.1"
+        "crypto": "^1.0.1",
+        "express": "^4.17.1",
+        "getmac": "^1.4.6",
+        "gulp": "^4.0.2",
+        "gulp-typescript": "^5.0.1",
+        "typescript": "^3.5.1",
+        "vscode-extension-telemetry-wrapper": "^0.4.0"
+    },
+    "devDependencies": {
+        "@types/node": "^12.0.8",
+        "typescript-compiler": "^1.4.1-2"
     }
 }
