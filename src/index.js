@@ -12,25 +12,23 @@ const handler = (oid, req, res) => {
         const requestHeaders = req.headers;
         const {referer} = requestHeaders;
         const ip = req.headers['x-forwarded-for'];
+        let ipAddress = ip.split(":")[0];
+        const geo = geoip.lookup(ipAddress);
+        const country = geo == null ? null : geo.country;
+        const region = geo == null ? null : geo.region;
+        const city = geo == null ? null : geo.city;
+        
         telemetry.sendInfo(oid, {
-            name: "requestInfo",
+            name:"requestInfo",
             "user-agent": requestHeaders["user-agent"],
             referer,
             "downloadVersion": version,
+            "language": requestHeaders["accept-language"],
             "ip": ip,
-            "language": requestHeaders["accept-language"]
+            "country": country,
+            "region": region,
+            "city": city,
         }, {});
-        if(ip !== null){
-            const geo = geoip.lookup(ip);
-            if(geo !== null) {
-                telemetry.sendInfo(oid, {
-                    name: "geoInfo",
-                    "country": geo.country,
-                    "region": geo.region,
-                    "city": geo.city
-                }, {});
-            }
-        }
     } catch (err) {
         console.log(err);
     }
