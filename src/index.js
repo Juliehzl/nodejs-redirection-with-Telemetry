@@ -11,13 +11,7 @@ const handler = (oid, req, res) => {
     try {
         const requestHeaders = req.headers;
         const {referer} = requestHeaders;
-        const ip = req.headers['x-forwarded-for'] || 
-                    req.connection.remoteAddress || 
-                    req.socket.remoteAddress ||
-                     (req.connection.socket ? req.connection.socket.remoteAddress : null);
-        console.log(req.headers['x-forwarded-for'] );
-        console.log(req.connection.remoteAddress);
-        console.log(req.socket.remoteAddress);
+        const ip = req.headers['x-forwarded-for'];
         telemetry.sendInfo(oid, {
             name: "requestInfo",
             "user-agent": requestHeaders["user-agent"],
