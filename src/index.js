@@ -6,6 +6,7 @@ const telemetry = require('vscode-extension-telemetry-wrapper');
 const handler = (oid, req, res) => {
     //const version = process.env.version;
     const version = "0.1.0";
+
     //Analyze request
     try {
         const requestHeaders = req.headers;
