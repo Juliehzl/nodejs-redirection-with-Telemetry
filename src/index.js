@@ -11,7 +11,7 @@ const handler = (oid, req, res) => {
     try {
         const requestHeaders = req.headers;
         const { referer} = requestHeaders;
-        const ip = req.client["localAddress"];
+        const ip = req.connection.remoteAddress;
         telemetry.sendInfo(oid, {
             name: "requestInfo",
             "user-agent": requestHeaders["user-agent"],
@@ -19,15 +19,15 @@ const handler = (oid, req, res) => {
             "downloadVersion": version,
             "ip": ip
         }, {});
-        
-        const geo = geoip.lookup(ip);
-        telemetry.sendInfo(oid, {
-            name: "requestInfo",
-            "country": geo.country,
-            "region": geo.region,
-            "city": geo.city
-        }, {});
-
+        if(ip !== null){
+            const geo = geoip.lookup(ip);
+            telemetry.sendInfo(oid, {
+                name: "requestInfo",
+                "country": geo.country,
+                "region": geo.region,
+                "city": geo.city
+            }, {});
+        }
     } catch (err) {
         //do nothing
     }
