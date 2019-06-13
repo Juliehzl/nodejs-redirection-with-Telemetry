@@ -2,25 +2,29 @@
 const geoip = require('geoip-lite');
 const http = require('http');
 const telemetry = require('vscode-extension-telemetry-wrapper');
-//const Id = require ("../telemetry/Id.ts");
-const handler = (oid, req, res) => {
-    const version = process.env.version;
 
+const handler = (oid, req, res) => {
+    //const version = process.env.version;
+    const version = "0.1.0";
     //Analyze request
     try {
         const requestHeaders = req.headers;
-        const ip = req.client["localAddress"];
-        const geo = geoip.lookup(ip);
         const { referer} = requestHeaders;
         telemetry.sendInfo(oid, {
-            name: "metadata",
+            name: "requestInfo",
             "user-agent": requestHeaders["user-agent"],
             referer,
-            "country": geo.country,
-            "region": geo.region,
-            "city": geo.city,
             "version": version
         }, {});
+        const ip = req.client["localAddress"];
+        const geo = geoip.lookup(ip);
+        telemetry.sendInfo(oid, {
+            name: "requestInfo",
+            "country": geo.country,
+            "region": geo.region,
+            "city": geo.city
+        }, {});
+
     } catch (err) {
         //do nothing
     }
