@@ -6,12 +6,15 @@ const telemetry = require('vscode-extension-telemetry-wrapper');
 const handler = (oid, req, res) => {
     //const version = process.env.version;
     const version = "0.1.0";
-
+    console.log(req);
     //Analyze request
     try {
         const requestHeaders = req.headers;
         const { referer} = requestHeaders;
-        const ip = req.connection.remoteAddress;
+        const ip = req.headers['x-forwarded-for'] || 
+        req.connection.remoteAddress || 
+        req.socket.remoteAddress ||
+        (req.connection.socket ? req.connection.socket.remoteAddress : null);
         telemetry.sendInfo(oid, {
             name: "requestInfo",
             "user-agent": requestHeaders["user-agent"],
