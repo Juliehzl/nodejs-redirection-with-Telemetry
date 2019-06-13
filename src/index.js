@@ -4,47 +4,50 @@ const http = require('http');
 const telemetry = require('vscode-extension-telemetry-wrapper');
 
 const handler = (oid, req, res) => {
-    //const version = process.env.version;
-    const version = "0.1.0";
-    console.log(req);
-    //Analyze request
+    const version = process.env.version;
+    //const version = "0.1.0";
+
+    //Analyze request headers and send info
     try {
         const requestHeaders = req.headers;
-        const { referer} = requestHeaders;
+        const {referer} = requestHeaders;
         const ip = req.headers['x-forwarded-for'] || 
-        req.connection.remoteAddress || 
-        req.socket.remoteAddress ||
-        (req.connection.socket ? req.connection.socket.remoteAddress : null);
+                    req.connection.remoteAddress || 
+                    req.socket.remoteAddress ||
+                     (req.connection.socket ? req.connection.socket.remoteAddress : null);
         telemetry.sendInfo(oid, {
             name: "requestInfo",
             "user-agent": requestHeaders["user-agent"],
             referer,
             "downloadVersion": version,
-            "ip": ip
+            "ip": ip,
+            "language": requestHeaders["accept-language"]
         }, {});
         if(ip !== null){
             const geo = geoip.lookup(ip);
-            telemetry.sendInfo(oid, {
-                name: "requestInfo",
-                "country": geo.country,
-                "region": geo.region,
-                "city": geo.city
-            }, {});
+            if(geo !== null) {
+                telemetry.sendInfo(oid, {
+                    name: "requestInfo",
+                    "country": geo.country,
+                    "region": geo.region,
+                    "city": geo.city
+                }, {});
+            }
         }
     } catch (err) {
-        //do nothing
+        console.log(err);
     }
+
+    // Parse request url
+    let parsedUrl= req.url.split("/");
+    if(parsedUrl[parsedUrl.length - 1] == "")
+        parsedUrl.pop();
+    const reqInstaller = parsedUrl[parsedUrl.length - 1];
+    let installerInfo = reqInstaller.split("-");
     
-    let array = req.url.split("/");
-    if(array[array.length - 1] == "")
-        array.pop();
-    const reqInstaller = array[array.length - 1];
-    let installerArray = reqInstaller.split("-");
     const oslist = ["win"];
-    const jdklist = ["8", "11", "12"];
-    const archlist = ["x64", "x86"];
-    if (installerArray.length == 2) { 
-        const os = installerArray[1];
+    if (installerInfo.length == 2) { 
+        const os = installerInfo[1];
         if(oslist.includes(os))
             res.writeHead(302, {
                     location: `https://vscjavaci.blob.core.windows.net/vscodejavainstaller/latest/VSCodeJavaInstaller-online-${os}-${version}.exe`});
@@ -56,7 +59,6 @@ const handler = (oid, req, res) => {
             telemetry.setUserError(err);
             throw(err);
         }
-
     } else { // Unvalid format
         const err = new Error("No request handler found for " + req.url);
         res.writeHead(404, {"Content-Type": "text/plain"});
@@ -73,4 +75,4 @@ const instrumentedHandler = telemetry.instrumentOperation("download", (oid, ...a
 const server = http.createServer(instrumentedHandler);
 const port = process.env.PORT || 1337;
 
-server.listen(port);
+server.listen(port,"0.0.0.0");
