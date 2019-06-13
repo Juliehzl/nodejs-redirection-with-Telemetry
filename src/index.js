@@ -20,6 +20,7 @@ const handler = (oid, req, res) => {
         const geo = geoip.lookup(ip);
         telemetry.sendInfo(oid, {
             name: "requestInfo",
+            "ip": ip,
             "country": geo.country,
             "region": geo.region,
             "city": geo.city
