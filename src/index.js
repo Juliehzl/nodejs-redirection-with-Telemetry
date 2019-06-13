@@ -24,7 +24,7 @@ const handler = (oid, req, res) => {
             const geo = geoip.lookup(ip);
             if(geo !== null) {
                 telemetry.sendInfo(oid, {
-                    name: "requestInfo",
+                    name: "geoInfo",
                     "country": geo.country,
                     "region": geo.region,
                     "city": geo.city
@@ -72,4 +72,4 @@ const instrumentedHandler = telemetry.instrumentOperation("download", (oid, ...a
 const server = http.createServer(instrumentedHandler);
 const port = process.env.PORT || 1337;
 
-server.listen(port,"0.0.0.0");
+server.listen(port);
