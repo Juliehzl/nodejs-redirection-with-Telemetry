@@ -14,7 +14,7 @@ const handler = (oid, req, res) => {
             name: "requestInfo",
             "user-agent": requestHeaders["user-agent"],
             referer,
-            "version": version
+            "downloadVersion": version
         }, {});
         const ip = req.client["localAddress"];
         const geo = geoip.lookup(ip);
