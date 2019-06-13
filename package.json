@@ -1,8 +1,8 @@
 {
-    "name": "vscode-java-installer",
+    "name": "vscdistribution-request",
     "version": "0.1.0",
     "publisher": "vscjava",
-    "aiKey": "ab7348c7-3ddf-4846-9277-1e9157a6821b",
+    "aiKey": "aa0fb70e-370c-4104-bc29-8a921018b85d",
     "private": true,
     "license": "MIT",
     "author": "Microsoft",
@@ -12,9 +12,11 @@
     "dependencies": {
         "crypto": "^1.0.1",
         "express": "^4.17.1",
+        "geoip-lite": "^1.3.7",
         "getmac": "^1.4.6",
         "gulp": "^4.0.2",
         "gulp-typescript": "^5.0.1",
+        "https": "^1.0.0",
         "typescript": "^3.5.1",
         "vscode-extension-telemetry-wrapper": "^0.4.0"
     },
