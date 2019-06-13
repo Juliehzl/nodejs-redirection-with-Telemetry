@@ -11,17 +11,18 @@ const handler = (oid, req, res) => {
     try {
         const requestHeaders = req.headers;
         const { referer} = requestHeaders;
+        const ip = req.client["localAddress"];
         telemetry.sendInfo(oid, {
             name: "requestInfo",
             "user-agent": requestHeaders["user-agent"],
             referer,
-            "downloadVersion": version
+            "downloadVersion": version,
+            "ip": ip
         }, {});
-        const ip = req.client["localAddress"];
+        
         const geo = geoip.lookup(ip);
         telemetry.sendInfo(oid, {
             name: "requestInfo",
-            "ip": ip,
             "country": geo.country,
             "region": geo.region,
             "city": geo.city
