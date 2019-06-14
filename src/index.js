@@ -23,7 +23,7 @@ const handler = (oid, req, res) => {
             "user-agent": requestHeaders["user-agent"],
             referer,
             "downloadVersion": version,
-            "language": requestHeaders["accept-language"],
+            "accept-language": requestHeaders["accept-language"],
             "country": country,
             "region": region,
             "city": city,
