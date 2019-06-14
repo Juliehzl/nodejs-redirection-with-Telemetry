@@ -24,7 +24,6 @@ const handler = (oid, req, res) => {
             referer,
             "downloadVersion": version,
             "language": requestHeaders["accept-language"],
-            "ip": ip,
             "country": country,
             "region": region,
             "city": city,
