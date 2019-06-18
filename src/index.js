@@ -1,6 +1,7 @@
 'use strict'
+const fs = require('fs')
 const geoip = require('geoip-lite');
-const http = require('http');
+const https = require('https');
 const telemetry = require('vscode-extension-telemetry-wrapper');
 
 const handler = (oid, req, res) => {
@@ -67,19 +68,17 @@ const handler = (oid, req, res) => {
     }
 };
 
+const key = fs.readFileSync('private.key');
+const cert = fs.readFileSync('mydomain.crt');
+
+const options = {
+    key: key,
+    cert: cert
+};
+
 const initialized = telemetry.initializeFromJsonFile("./package.json", true);
 const instrumentedHandler = telemetry.instrumentOperation("download", (oid, ...args) => handler(oid, ...args));
-const server = http.createServer(instrumentedHandler);
-server.on('request', (request, response) => {
-    const { method, url } = request;
-    let body = [];
-    request.on('data', (chunk) => {
-        body.push(chunk);
-    }).on('end', () => {
-    body = Buffer.concat(body).toString();
-    // at this point, `body` has the entire request body stored in it as a string
-    });
-});
+const server = https.createServer(options, instrumentedHandler);
 
 const port = process.env.PORT || 1337;
 
