@@ -1,7 +1,7 @@
 'use strict'
 const fs = require('fs')
 const geoip = require('geoip-lite');
-const https = require('https');
+const http = require('http');
 const telemetry = require('vscode-extension-telemetry-wrapper');
 
 const handler = (oid, req, res) => {
@@ -44,7 +44,7 @@ const handler = (oid, req, res) => {
             const os = installerInfo[1];
             if(oslist.includes(os)) {
                 res.writeHead(302, {
-                   location: `https://vscjavaci.blob.core.windows.net/vscodejavainstaller/latest/VSCodeJavaInstaller-online-${os}-${version}.exe`});
+                   location: `http://vscjavaci.blob.core.windows.net/vscodejavainstaller/latest/VSCodeJavaInstaller-online-${os}-${version}.exe`});
             }
             else {
                 const err = new Error("No request handler found for " + req.url);
@@ -68,18 +68,18 @@ const handler = (oid, req, res) => {
     }
 };
 
-const key = fs.readFileSync('private.key');
-const cert = fs.readFileSync('mydomain.crt');
+var key = fs.readFileSync('private.key');
+var cert = fs.readFileSync('mydomain.crt');
 
-const options = {
+var options = {
     key: key,
     cert: cert
 };
 
 const initialized = telemetry.initializeFromJsonFile("./package.json", true);
 const instrumentedHandler = telemetry.instrumentOperation("download", (oid, ...args) => handler(oid, ...args));
-const server = https.createServer(options, instrumentedHandler);
+const server = http.createServer( instrumentedHandler);
 
 const port = process.env.PORT || 1337;
 
-server.listen(8080);
+server.listen(port);
