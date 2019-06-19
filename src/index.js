@@ -82,4 +82,4 @@ const server = https.createServer(options, instrumentedHandler);
 
 const port = process.env.PORT || 1337;
 
-server.listen(port);
+server.listen(8080);
